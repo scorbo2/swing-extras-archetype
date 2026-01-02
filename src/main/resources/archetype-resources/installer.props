@@ -51,5 +51,5 @@ TO_COPY="${TO_COPY} src/main/resources/${packageInPathFormat}/${artifactNameLowe
 #TO_COPY="${TO_COPY} update_sources.json"
 
 # TODO uncomment this to automatically generate a desktop icon for your app:
-#      (the path can be adjusted, but the file must be named "logo.png")
+#      (the path can be adjusted, but the file must be named "logo.png" and should be square)
 #TO_COPY="${TO_COPY} src/main/resources/${packageInPathFormat}/${artifactNameLowerCase}/images/logo.png"

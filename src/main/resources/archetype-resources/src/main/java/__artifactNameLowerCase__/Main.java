@@ -138,6 +138,10 @@ public class Main {
                 // Let our ExtensionManager know about this, so the "available" tab can
                 // be loaded and shown automatically in the ExtensionManagerDialog:
                 ${artifactNamePascalCase}ExtensionManager.getInstance().setUpdateManager(updateManager);
+
+                // Let our AboutInfo know about this too, so the About dialog can do application version checks:
+                Version.getAboutInfo().updateManager = updateManager;
+
                 logger.info("Update sources provided. Dynamic extension discovery is enabled.");
             }
             catch (Exception e) {
