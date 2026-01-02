@@ -146,8 +146,8 @@ Your skeletal application comes with many `swing-extras` features already wired 
     - The example main menu in MainWindow shows how to launch the built-in AboutDialog from `swing-extras`. The dialog
       automatically displays information about your application. You can configure what is displayed by adjusting the
       `AboutInfo` instance that is created in the `Version` class.
-  - If you are using `UpdateManager`, the AboutDialog will automatically do a version check on your application, and
-    will report whether a newer version is available.
+    - If you are using `UpdateManager`, the AboutDialog will automatically do a version check on your application, and
+      will report whether a newer version is available.
 
 ## What is NOT included in this template
 
