@@ -1,0 +1,189 @@
+package ${package}.${artifactNameLowerCase}.ui;
+
+import ca.corbett.extras.MessageUtil;
+import ca.corbett.extras.SingleInstanceManager;
+import ${package}.${artifactNameLowerCase}.AppConfig;
+import ${package}.${artifactNameLowerCase}.Main;
+import ${package}.${artifactNameLowerCase}.Version;
+import ${package}.${artifactNameLowerCase}.extensions.${artifactNamePascalCase}ExtensionManager;
+import ${package}.${artifactNameLowerCase}.ui.actions.UIReloadAction;
+
+import javax.swing.JFrame;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.List;
+import java.util.logging.Logger;
+
+public final class MainWindow extends JFrame implements UIReloadable {
+
+    private static final MainWindow instance = new MainWindow();
+    private static final Logger logger = Logger.getLogger(MainWindow.class.getName());
+    private boolean isSingleInstanceModeEnabled;
+    private MenuManager menuManager;
+    private MessageUtil messageUtil;
+
+    private MainWindow() {
+        setTitle(Version.FULL_NAME);
+        //setIconImage(); // TODO - set your application icon here
+        setSize(800, 600);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        addWindowListener(new WindowCloseHandler());
+        KeyboardManager.addGlobalKeyListener(this);
+        menuManager = new MenuManager();
+        setJMenuBar(menuManager.getMainMenuBar());
+        UIReloadAction.getInstance().registerReloadable(this);
+        isSingleInstanceModeEnabled = AppConfig.getInstance().isSingleInstanceEnabled();
+    }
+
+    public static MainWindow getInstance() {
+        return instance;
+    }
+
+    /**
+     * When single-instance mode is enabled, and a second instance of your application tries
+     * to start up, it will detect that the primary instance is already running, send its
+     * start arguments to the primary instance, and then immediately exit. The primary instance
+     * will then invoke this method on the EDT to allow it to process those arguments.
+     */
+    public void processStartArgs(List<String> args) {
+        // Bring the main window to the front:
+        // (If running in single instance mode, we want to make sure the user sees it.)
+        bringToFront();
+
+        // If we were given no args, we're done:
+        // But note that we do this AFTER bringing the window to the front.
+        // If you try to launch a second instance when the first instance is up,
+        // but it is obscured by some other window, we want to bring the single instance to the front.
+        // Otherwise, it may seem to the user like nothing happened, because the new instance just exits.
+        if (args == null || args.isEmpty()) {
+            return;
+        }
+
+        // Process each argument:
+        for (String arg : args) {
+            // Strip wrapping single quotes if present:
+            // (some OSes/shells may add these - tested on Linux Mint with Cinnamon, and it's a problem there):
+            if (arg.startsWith("'") && arg.endsWith("'") && arg.length() > 1) {
+                arg = arg.substring(1, arg.length() - 1);
+            }
+
+            // Now handle the argument:
+            logger.info("Received start argument: " + arg);
+        }
+    }
+
+    /**
+     * Hook invoked as the application is shutting down,
+     * or when the application needs to restart to pick up an extension change.
+     */
+    public void cleanup() {
+        logger.info("Shutting down: MainWindow cleanup invoked.");
+        ${artifactNamePascalCase}ExtensionManager.getInstance().deactivateAll();
+
+        // Do whatever cleanup your application requires here...
+        // Close db connections, save window state, commit unsaved data, etc.
+
+        logger.info("Cleanup completed.");
+    }
+
+    /**
+     * Invoked when the application's UI needs to be reloaded,
+     * either because the application properties have been updated,
+     * or because extensions have been enabled/disabled.
+     */
+    @Override
+    public void reloadUI() {
+        // Single instance mode may have changed, so check that:
+        if (isSingleInstanceModeEnabled != AppConfig.getInstance().isSingleInstanceEnabled()) {
+            toggleSingleInstanceMode();
+        }
+
+        // Rebuild our main menu, as the available items may have changed:
+        menuManager.rebuildAll();
+    }
+
+    /**
+     * Who would've thunk that bringing a window to the front would be so
+     * platform-dependent and require all sorts of goofy hacks?
+     */
+    private void bringToFront() {
+        final boolean isLinux = System.getProperty("os.name").toLowerCase().contains("linux");
+        setState(JFrame.NORMAL); // unminimize if needed
+        if (isLinux) {
+            setAlwaysOnTop(true); // cheesy trick to make this work on linux
+        }
+        toFront();
+        requestFocus();
+        if (isLinux) {
+            setAlwaysOnTop(false); // linux mint cinnamon seems to ignore toFront() unless we do this
+        }
+    }
+
+    /**
+     * Invoked internally to toggle the state of single-instance mode.
+     */
+    private void toggleSingleInstanceMode() {
+        // Toggle our cached value:
+        isSingleInstanceModeEnabled = !isSingleInstanceModeEnabled;
+
+        // If single instance mode is now enabled, try to acquire the lock:
+        if (isSingleInstanceModeEnabled) {
+            logger.info("Enabling single instance mode.");
+            SingleInstanceManager instanceManager = SingleInstanceManager.getInstance();
+            if (!instanceManager.tryAcquireLock(a -> MainWindow.getInstance().processStartArgs(a),
+                                                Main.SINGLE_INSTANCE_PORT)) {
+                // Another instance is already running, let's inform the user:
+                getMessageUtil().error("Single Instance Mode",
+                                       "Another instance of the application is already running.\n" +
+                                               "Unable to enable single instance mode.");
+                isSingleInstanceModeEnabled = false; // revert our cached value
+            }
+        }
+
+        // Otherwise, if single instance mode is now disabled, release the lock if we have it:
+        else {
+            logger.info("Disabling single instance mode.");
+            SingleInstanceManager.getInstance().release();
+        }
+    }
+
+    /**
+     * Lazily creates and returns our MessageUtil instance for reporting errors, warnings, info, etc.
+     */
+    private MessageUtil getMessageUtil() {
+        if (messageUtil == null) {
+            messageUtil = new MessageUtil(this);
+        }
+        return messageUtil;
+    }
+
+    /**
+     * This class can ensure that our cleanup() method is invoked
+     * whenever the main window is closed, whether by user action
+     * or programmatically.
+     */
+    private static class WindowCloseHandler extends WindowAdapter {
+        /**
+         * Invoked when the user manually closes a window by clicking its X button
+         * or using a keyboard shortcut like Ctrl+Q or whatever. This event handler
+         * is NOT invoked when you manually dispose() the window (at least in my
+         * testing on linux mint). We need BOTH windowClosing() and windowClosed() handlers
+         * to ensure cleanup() is always invoked.
+         */
+        @Override
+        public void windowClosing(WindowEvent e) {
+            MainWindow.getInstance().cleanup();
+        }
+
+        /**
+         * Invoked when you programmatically dispose() of the window. Note that the
+         * user manually closing the window via the OS does NOT invoke this handler
+         * (at least in my testing on linux mint). We need BOTH windowClosing() and windowClosed() handlers
+         * to ensure cleanup() is always invoked.
+         */
+        @Override
+        public void windowClosed(WindowEvent e) {
+            MainWindow.getInstance().cleanup();
+        }
+    }
+}

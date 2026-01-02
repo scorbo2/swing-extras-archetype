@@ -6,7 +6,7 @@
 
     <groupId>ca.corbett</groupId>
     <artifactId>swing-extras-archetype</artifactId>
-    <version>2.6-SNAPSHOT</version>
+    <version>2.6.0-SNAPSHOT</version>
     <packaging>maven-archetype</packaging>
 
     <name>swing-extras-archetype</name>
@@ -32,9 +32,9 @@
     </developers>
 
     <scm>
-        <connection>scm:git:git://github.com/scorbo2/swing-extras.git</connection>
-        <developerConnection>scm:git:ssh://github.com:scorbo2/swing-extras.git</developerConnection>
-        <url>http://github.com/scorbo2/swing-extras/tree/master</url>
+        <connection>scm:git:git://github.com/scorbo2/swing-extras-archetype.git</connection>
+        <developerConnection>scm:git:ssh://github.com:scorbo2/swing-extras-archetype.git</developerConnection>
+        <url>http://github.com/scorbo2/swing-extras-archetype/tree/master</url>
     </scm>
 
     <properties>
@@ -51,8 +51,52 @@
                 <version>3.2.0</version>
             </extension>
         </extensions>
-        <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
+        <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.sonatype.central</groupId>
+                    <artifactId>central-publishing-maven-plugin</artifactId>
+                    <version>0.7.0</version>
+                    <extensions>true</extensions>
+                    <configuration>
+                        <publishingServerId>central</publishingServerId>
+                        <checksums>all</checksums>
+                        <centralBaseUrl>https://central.sonatype.com</centralBaseUrl>
+                        <centralSnapshotsUrl>
+                            https://central.sonatype.com/repository/maven-snapshots/
+                        </centralSnapshotsUrl>
+                        <skipPublishing>true</skipPublishing> <!-- skip publishing until out of SNAPSHOT -->
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>3.3.1</version>
+                    <executions>
+                        <execution>
+                            <id>attach-sources</id>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>1.6</version>
+                    <executions>
+                        <execution>
+                            <id>sign-artifacts</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>sign</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                
+                <!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
                 <plugin>
                     <artifactId>maven-clean-plugin</artifactId>
                     <version>3.4.0</version>
