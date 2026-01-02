@@ -1,0 +1,5 @@
+${artifactNamePascalCase} Release Notes
+==============================================
+
+Version 1.0.0 - Initial Release
+  - First stable release of the ${artifactNamePascalCase} application.

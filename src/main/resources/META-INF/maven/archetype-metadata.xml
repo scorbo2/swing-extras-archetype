@@ -19,16 +19,50 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<archetype-descriptor xmlns="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-descriptor/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-descriptor/1.0.0 http://maven.apache.org/xsd/archetype-descriptor-1.0.0.xsd"
-  name="${artifactId}">
+<archetype-descriptor xmlns="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-descriptor/1.0.0"
+                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                      xsi:schemaLocation="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-descriptor/1.0.0 http://maven.apache.org/xsd/archetype-descriptor-1.0.0.xsd"
+                      name="${artifactId}">
 
-  <fileSets>
-    <fileSet filtered="true" packaged="true">
-      <directory>src/main/java</directory>
-    </fileSet>
-    <fileSet filtered="true" packaged="true">
-      <directory>src/test/java</directory>
-    </fileSet>
-  </fileSets>
+    <fileSets>
+
+        <!-- Source code and resources that need filtering and packaging -->
+        <fileSet filtered="true" packaged="true">
+            <directory>src/main/java</directory>
+        </fileSet>
+        <fileSet filtered="true" packaged="true">
+            <directory>src/main/resources</directory>
+        </fileSet>
+
+        <!-- Root-level files that need filtering -->
+        <fileSet filtered="true" packaged="false">
+            <directory></directory>
+            <includes>
+                <include>README.md</include>
+                <include>installer.props</include>
+            </includes>
+        </fileSet>
+
+        <!-- Root-level files that do not need filtering -->
+        <fileSet filtered="false" packaged="false">
+            <directory></directory>
+            <includes>
+                <include>.gitignore</include>
+                <include>.editorconfig</include>
+            </includes>
+        </fileSet>
+    </fileSets>
+
+    <requiredProperties>
+        <requiredProperty key="artifactNameLowerCase">
+            <!-- Will convert "Test-App_test 01" to "testapptest01" -->
+            <defaultValue>${artifactId.toLowerCase().replaceAll("[\s-_]", "")}</defaultValue>
+        </requiredProperty>
+
+        <requiredProperty key="artifactNamePascalCase">
+            <!-- Expression language is too limited to do this, so start with a simple default -->
+            <defaultValue>NewProject</defaultValue>
+        </requiredProperty>
+    </requiredProperties>
+
 </archetype-descriptor>
