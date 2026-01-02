@@ -16,7 +16,7 @@ replacing the placeholders with your own values:
 mvn archetype:generate \
   -DarchetypeGroupId=ca.corbett \
   -DarchetypeArtifactId=swing-extras-archetype \
-  -DarchetypeVersion=2.6.0 \
+  -DarchetypeVersion=2.6.1 \
   -DgroupId=com.example \
   -DartifactId=my-app \
   -Dversion=1.0.0 \
@@ -32,6 +32,13 @@ in the details for our new project:
 
 ![IntelliJ New Project from Maven Archetype](setup-intellij.png)
 
+### Archetype version
+
+**Always use the latest version of the archetype!**
+
+At the time of writing, the latest version is `2.6.1`. You can check for the latest version on
+[Maven Central](https://repo1.maven.org/maven2/ca/corbett/swing-extras-archetype/).
+
 ### Required properties
 
 Regardless of which method you use to create your new project, you will need to provide values for the
@@ -41,6 +48,8 @@ following properties:
 - `artifactId`: the artifact ID for your new project, e.g. `my-app`
 - `version`: the version for your new project, e.g. `1.0.0`
 - `artifactNamePascalCase`: the name of your application in PascalCase, e.g. `MyApp`
+    - (this will be used in some class names, for example `MyAppExtensionManager` and `MyAppExtension`, so it cannot
+      contain hyphens or spaces)
 
 ### After generating your new project
 
@@ -127,12 +136,18 @@ Your skeletal application comes with many `swing-extras` features already wired 
     - When the user okays the PropertiesDialog or the ExtensionManagerDialog, the UI is automatically reloaded to
       reflect any changes
       made. The MainWindow is wired up to receive UI reload events, and you can add your additional dialogs or UI
-      classes to the notification list by implementing the `UIReloadable` interface adding your UI class as a listener
-      to the `UIReloadAction` class.
+      classes to the notification list by implementing the `UIReloadable` interface, and adding your UI class as a
+      listener to the `UIReloadAction` class.
+- **Intelligent detection of your application environment.**
+    - The `Version` class automatically detects your application's installation directory based on supplied environment
+      variables, and also your application's configuration and extension directories. These are exposed to your
+      application code in convenient constants.
 - **An AboutDialog is automatically generated.**
     - The example main menu in MainWindow shows how to launch the built-in AboutDialog from `swing-extras`. The dialog
       automatically displays information about your application. You can configure what is displayed by adjusting the
       `AboutInfo` instance that is created in the `Version` class.
+    - If you are using `UpdateManager`, the AboutDialog will automatically do a version check on your application, and
+      will report whether a newer version is available.
 
 ## What is NOT included in this template
 
