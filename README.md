@@ -39,6 +39,13 @@ in the details for our new project:
 At the time of writing, the latest version is `2.7.0`. You can check for the latest version on
 [Maven Central](https://repo1.maven.org/maven2/ca/corbett/swing-extras-archetype/).
 
+This archetype will generate a project with swing-extras version 2.7.0 as a dependency.
+The archetype patch version may increment independently of the swing-extras library version,
+but the `major.minor` will match the `major.minor` version of swing-extras it is designed to work with.
+For example, versions 2.6.0, 2.6.1, 2.6.2 of this archetype all generate projects with swing-extras 2.6.0,
+and version 2.7.0 of this archetype would generate projects with swing-extras 2.7.0.
+The swing-extras library does not normally have patch releases, so only `major.minor` actually matters.
+
 ### Required properties
 
 Regardless of which method you use to create your new project, you will need to provide values for the
@@ -50,6 +57,9 @@ following properties:
 - `artifactNamePascalCase`: the name of your application in PascalCase, e.g. `MyApp`
     - (this will be used in some class names, for example `MyAppExtensionManager` and `MyAppExtension`, so it cannot
       contain hyphens or spaces)
+
+The `artifactNameLowerCase` property is filled in for you automatically, and generally you do not need to provide it
+yourself.
 
 ### After generating your new project
 
