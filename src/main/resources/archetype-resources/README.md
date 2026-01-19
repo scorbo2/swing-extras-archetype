@@ -20,5 +20,5 @@ TODO Insert license information here.
 
 #[[##]]# Version history
 
-Refer to the [Release Notes](${packageInPathFormat}/${artifactNameLowerCase}/ReleaseNotes.txt) for a detailed version
-history.
+Refer to the [Release Notes](src/main/resources/${packageInPathFormat}/${artifactNameLowerCase}/ReleaseNotes.txt) for
+a detailed version history.
