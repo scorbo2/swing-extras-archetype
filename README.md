@@ -16,7 +16,7 @@ replacing the placeholders with your own values:
 mvn archetype:generate \
   -DarchetypeGroupId=ca.corbett \
   -DarchetypeArtifactId=swing-extras-archetype \
-  -DarchetypeVersion=2.6.1 \
+  -DarchetypeVersion=2.7.0 \
   -DgroupId=com.example \
   -DartifactId=my-app \
   -Dversion=1.0.0 \
@@ -36,7 +36,7 @@ in the details for our new project:
 
 **Always use the latest version of the archetype!**
 
-At the time of writing, the latest version is `2.6.1`. You can check for the latest version on
+At the time of writing, the latest version is `2.7.0`. You can check for the latest version on
 [Maven Central](https://repo1.maven.org/maven2/ca/corbett/swing-extras-archetype/).
 
 ### Required properties
@@ -175,6 +175,6 @@ Refer to the full documentation online:
 
 - Full code for `swing-extras` is [available on GitHub](https://github.com/scorbo2/swing-extras/).
 - You can also read through the [swing-extras book](http://www.corbett.ca/swing-extras-book/)
-- The [javadocs](http://www.corbett.ca/swing-extras-javadocs/) for `swing-extras` are also available.
+- The [Javadocs](http://www.corbett.ca/swing-extras-javadocs/) for `swing-extras` are also available.
 - The source code for your generated skeletal project is also heavily commented to help you understand how everything
   fits together.
