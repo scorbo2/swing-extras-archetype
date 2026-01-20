@@ -2,7 +2,6 @@ package ${package}.${artifactNameLowerCase}.extensions;
 
 import ca.corbett.extensions.AppExtension;
 
-import java.awt.event.KeyEvent;
 import javax.swing.*;
 import java.util.List;
 
@@ -24,19 +23,6 @@ import java.util.List;
  * @author <a href="https://github.com/scorbo2">scorbo2</a>
  */
 public abstract class ${artifactNamePascalCase}Extension extends AppExtension {
-
-    /**
-     * Invoked when the application receives a keyboard shortcut. The extension
-     * can choose to do something with it or not. Processing the keyboard event
-     * does not stop when an extension acts on a shortcut, so in theory multiple
-     * extensions could respond to the same keyboard shortcut.
-     *
-     * @param keyEvent the KeyEvent that triggered this message.
-     * @return true if this extension handled the shortcut (default false).
-     */
-    public boolean handleKeyEvent(KeyEvent keyEvent) {
-        return false;
-    }
 
     /**
      * Invoked when the application wants to know if the extension has its own top-level

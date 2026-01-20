@@ -1,7 +1,9 @@
 package ${package}.${artifactNameLowerCase}.ui;
 
 import ca.corbett.extras.MessageUtil;
+import ca.corbett.extras.io.KeyStrokeManager;
 import ca.corbett.extras.SingleInstanceManager;
+import ca.corbett.extras.properties.KeyStrokeProperty;
 import ${package}.${artifactNameLowerCase}.AppConfig;
 import ${package}.${artifactNameLowerCase}.Main;
 import ${package}.${artifactNameLowerCase}.Version;
@@ -20,6 +22,7 @@ public final class MainWindow extends JFrame implements UIReloadable {
     private static final Logger logger = Logger.getLogger(MainWindow.class.getName());
     private boolean isSingleInstanceModeEnabled;
     private MenuManager menuManager;
+    private final KeyStrokeManager keyStrokeManager;
     private MessageUtil messageUtil;
 
     private MainWindow() {
@@ -28,7 +31,8 @@ public final class MainWindow extends JFrame implements UIReloadable {
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         addWindowListener(new WindowCloseHandler());
-        KeyboardManager.addGlobalKeyListener(this);
+        keyStrokeManager = new KeyStrokeManager(this);
+        setKeyStrokes();
         menuManager = new MenuManager();
         setJMenuBar(menuManager.getMainMenuBar());
         UIReloadAction.getInstance().registerReloadable(this);
@@ -98,8 +102,27 @@ public final class MainWindow extends JFrame implements UIReloadable {
             toggleSingleInstanceMode();
         }
 
+        // Reassign our keyboard shortcuts, as they may have changed:
+        setKeyStrokes();
+
         // Rebuild our main menu, as the available items may have changed:
         menuManager.rebuildAll();
+    }
+
+    /**
+     * Sets up our KeyStrokeManager with the appropriate KeyStrokes from app config.
+     */
+    private void setKeyStrokes() {
+        keyStrokeManager.clear();
+        for (KeyStrokeProperty prop : AppConfig.getInstance().getKeyStrokeProperties()) {
+            // If there's no Action attached, or if there is no keystroke assigned to it, skip it:
+            if (prop.getAction() == null || prop.getKeyStroke() == null) {
+                continue;
+            }
+
+            // Register it! This will update the shortcut attached to our menu items as well:
+            keyStrokeManager.registerHandler(prop.getKeyStroke(), prop.getAction());
+        }
     }
 
     /**
