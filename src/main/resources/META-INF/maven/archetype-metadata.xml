@@ -26,12 +26,29 @@ under the License.
 
     <fileSets>
 
-        <!-- Source code and resources that need filtering and packaging -->
+        <!-- Source code that needs filtering and packaging -->
         <fileSet filtered="true" packaged="true">
             <directory>src/main/java</directory>
         </fileSet>
+
+        <!-- Resource files that need filtering and packaging -->
         <fileSet filtered="true" packaged="true">
             <directory>src/main/resources</directory>
+            <excludes>
+                <exclude>example-images/**</exclude>
+            </excludes>
+        </fileSet>
+
+        <!-- Resource files that do NOT need filtering or packaging -->
+        <!-- I really want to package these in the same com/example/artifact structure as above, -->
+        <!-- but the archetype plugin always seems to perform variable substitution on my images, -->
+        <!-- rendering them useless. So, I have to move them out to a top-level resource directory. -->
+        <!-- This is HIGHLY annoying but, I can't find any other solution to it. -->
+        <fileSet filtered="false" packaged="false">
+            <directory>src/main/resources</directory>
+            <includes>
+                <include>example-images/**</include>
+            </includes>
         </fileSet>
 
         <!-- Root-level files that need filtering -->
