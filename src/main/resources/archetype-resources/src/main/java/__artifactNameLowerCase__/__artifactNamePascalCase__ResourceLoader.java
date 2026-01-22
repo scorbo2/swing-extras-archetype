@@ -34,10 +34,10 @@ public class ${artifactNamePascalCase}ResourceLoader extends ResourceLoader {
      * is that callers can directly call our parent class's static methods,
      * like this, to retrieve specific resources:
      * <pre>
-     *     logoImage = ResourceLoader.getImage("example-images/swing-extras-icon.png");
+     *     logoImage = ResourceLoader.getImage("example-images/swing-extras-icon.jpg");
      *
      *     // Or, to scale to 32x32 and retrieve as an IconImage instead:
-     *     logoIcon = ResourceLoader.getIcon("example-images/swing-extras-icon.png", 32);
+     *     logoIcon = ResourceLoader.getIcon("example-images/swing-extras-icon.jpg", 32);
      * </pre>
      * <p>
      * The benefit of adding wrapper methods here is that it makes the code more readable.
