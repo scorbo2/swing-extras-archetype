@@ -183,16 +183,26 @@ public class AppConfig extends AppProperties<${artifactNamePascalCase}Extension>
     private List<AbstractProperty> createKeyboardProperties() {
         List<AbstractProperty> props = new ArrayList<>();
 
-        props.add(new KeyStrokeProperty(KEY_PROPERTIES, "Properties Dialog:", KeyStrokeManager.parseKeyStroke("Ctrl+P"),
-                                        propertiesAction));
-        props.add(new KeyStrokeProperty(KEY_EXTENSIONS, "Extension Manager:", KeyStrokeManager.parseKeyStroke("Ctrl+E"),
-                                        extensionManagerAction));
-        props.add(new KeyStrokeProperty(KEY_LOG_CONSOLE,  "Log Console:", KeyStrokeManager.parseKeyStroke("Ctrl+L"),
-                                        logConsoleAction));
-        props.add(new KeyStrokeProperty(KEY_ABOUT, "About Dialog:", KeyStrokeManager.parseKeyStroke("Ctrl+A"),
-                                        aboutAction));
-        props.add(new KeyStrokeProperty(KEY_EXIT, "Exit Application:", KeyStrokeManager.parseKeyStroke("Ctrl+Q"),
-                                        exitAction));
+        props.add(new KeyStrokeProperty(KEY_PROPERTIES, "Properties Dialog:",
+                                        KeyStrokeManager.parseKeyStroke("Ctrl+P"),
+                                        propertiesAction)
+                          .setAllowBlank(true));
+        props.add(new KeyStrokeProperty(KEY_EXTENSIONS, "Extension Manager:",
+                                        KeyStrokeManager.parseKeyStroke("Ctrl+E"),
+                                        extensionManagerAction)
+                          .setAllowBlank(true));
+        props.add(new KeyStrokeProperty(KEY_LOG_CONSOLE,  "Log Console:",
+                                        KeyStrokeManager.parseKeyStroke("Ctrl+L"),
+                                        logConsoleAction)
+                          .setAllowBlank(true));
+        props.add(new KeyStrokeProperty(KEY_ABOUT, "About Dialog:",
+                                        KeyStrokeManager.parseKeyStroke("Ctrl+A"),
+                                        aboutAction)
+                          .setAllowBlank(true));
+        props.add(new KeyStrokeProperty(KEY_EXIT, "Exit Application:",
+                                        KeyStrokeManager.parseKeyStroke("Ctrl+Q"),
+                                        exitAction)
+                          .setAllowBlank(true));
 
         return props;
     }
