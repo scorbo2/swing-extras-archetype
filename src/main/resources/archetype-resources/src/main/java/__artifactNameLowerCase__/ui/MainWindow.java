@@ -204,7 +204,7 @@ public final class MainWindow extends JFrame implements UIReloadable {
         // TODO repeat for any other operations you wish to "stand out" in the LogConsole.
 
         // Now let's register our theme and switch to it immediately:
-        LogConsole.getInstance().registerTheme("Test4App", theme, true);
+        LogConsole.getInstance().registerTheme("${artifactNamePascalCase}Theme", theme, true);
 
         // To test it out, let's log some test messages.
         logger.info("The LogConsole has been initialized!");
