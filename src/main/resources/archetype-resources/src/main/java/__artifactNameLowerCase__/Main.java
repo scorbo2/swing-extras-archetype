@@ -34,7 +34,7 @@ public class Main {
         configureLogging();
 
         // Peek at our config file to see if single instance mode is enabled:
-        boolean isSingleInstanceEnabled = Boolean.parseBoolean(AppConfig.peek("UI.General.singleInstance"));
+        boolean isSingleInstanceEnabled = Boolean.parseBoolean(AppConfig.peek(AppConfig.SINGLE_INSTANCE_PROP));
 
         if (isSingleInstanceEnabled) {
             SingleInstanceManager instanceManager = SingleInstanceManager.getInstance();

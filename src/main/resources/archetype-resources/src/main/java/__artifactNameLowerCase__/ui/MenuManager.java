@@ -1,5 +1,6 @@
 package ${package}.${artifactNameLowerCase}.ui;
 
+import ${package}.${artifactNameLowerCase}.AppConfig;
 import ${package}.${artifactNameLowerCase}.extensions.${artifactNamePascalCase}ExtensionManager;
 import ${package}.${artifactNameLowerCase}.ui.actions.*;
 
@@ -89,10 +90,7 @@ public class MenuManager {
             fileMenu.addSeparator();
         }
 
-        JMenuItem exitItem = new JMenuItem(new ExitAction());
-        exitItem.setMnemonic(KeyEvent.VK_X);
-        exitItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, KeyEvent.CTRL_DOWN_MASK));
-        fileMenu.add(exitItem);
+        fileMenu.add(new JMenuItem(AppConfig.getInstance().getExitAction()));
     }
 
     private void rebuildEditMenu() {
@@ -109,8 +107,8 @@ public class MenuManager {
             editMenu.addSeparator();
         }
 
-        editMenu.add(new JMenuItem(new PropertiesAction()));
-        editMenu.add(new JMenuItem(new ExtensionManagerAction()));
+        editMenu.add(new JMenuItem(AppConfig.getInstance().getPropertiesAction()));
+        editMenu.add(new JMenuItem(AppConfig.getInstance().getExtensionManagerAction()));
     }
 
     private void rebuildHelpMenu() {
@@ -127,15 +125,7 @@ public class MenuManager {
             helpMenu.addSeparator();
         }
 
-        JMenuItem logConsoleItem = new JMenuItem(new LogConsoleAction());
-        logConsoleItem.setMnemonic(KeyEvent.VK_L);
-        logConsoleItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, KeyEvent.CTRL_DOWN_MASK));
-        helpMenu.add(logConsoleItem);
-
-        JMenuItem aboutItem = new JMenuItem(new AboutAction());
-        aboutItem.setMnemonic(KeyEvent.VK_A);
-        aboutItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.CTRL_DOWN_MASK));
-        helpMenu.add(aboutItem);
+        helpMenu.add(new JMenuItem(AppConfig.getInstance().getLogConsoleAction()));
+        helpMenu.add(new JMenuItem(AppConfig.getInstance().getAboutAction()));
     }
-
 }

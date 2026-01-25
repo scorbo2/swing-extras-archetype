@@ -1,9 +1,12 @@
 package ${package}.${artifactNameLowerCase}.extensions.builtin;
 
 import ca.corbett.extensions.AppExtensionInfo;
+import ca.corbett.extras.io.KeyStrokeManager;
 import ca.corbett.extras.properties.AbstractProperty;
 import ca.corbett.extras.properties.BooleanProperty;
+import ca.corbett.extras.properties.KeyStrokeProperty;
 import ca.corbett.extras.properties.LabelProperty;
+import ${package}.${artifactNameLowerCase}.AppConfig;
 import ${package}.${artifactNameLowerCase}.Version;
 import ${package}.${artifactNameLowerCase}.extensions.${artifactNamePascalCase}Extension;
 import ${package}.${artifactNameLowerCase}.ui.MainWindow;
@@ -12,7 +15,6 @@ import javax.swing.AbstractAction;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -39,6 +41,13 @@ import java.util.logging.Logger;
 public class TestExtension extends ${artifactNamePascalCase}Extension {
     private static final Logger logger = Logger.getLogger(TestExtension.class.getName());
     private final AppExtensionInfo extInfo;
+
+    private final String keyStrokeMessage = "You pressed the TestExtension keyboard shortcut!\n" +
+            "This keyboard shortcut will only work when the extension is enabled.";
+
+    private final String menuMessage = "You selected a TestExtension menu item!\n" +
+            "This menu item will only be visible when the extension is enabled.\n\n" +
+            "Disabling the TestExtension will remove this menu item.";
 
     public TestExtension() {
         // All extensions must supply a well-formed AppExtensionInfo object:
@@ -88,6 +97,23 @@ public class TestExtension extends ${artifactNamePascalCase}Extension {
         props.add(new BooleanProperty("TestExtension.General.field3", "Option 3", true));
         props.add(new LabelProperty("TestExtension.General.label3",
                                     "If you disable TestExtension, these should vanish."));
+
+        // We can register a keyboard shortcut property as well if we want:
+        String propName = AppConfig.KEYSTROKE_PREFIX + "TestExtension.TestAction";
+        KeyStrokeProperty keyProp = new KeyStrokeProperty(propName,
+                                                          "Key shortcut:",
+                                                          KeyStrokeManager.parseKeyStroke("Ctrl+T"),
+                                                          new DummyAction("TestExtension Action", keyStrokeMessage));
+
+        // We could prevent it from showing up on the app properties dialog if we wanted to:
+        // keyProp.setExposed(false);
+
+        // If we do expose it, we can give the user the option to unassign it by blanking out the field:
+        keyProp.setAllowBlank(true);
+
+        // Otherwise, the user can see it and customize it, and the new shortcut will be automatically persisted!
+        props.add(keyProp);
+
         return props;
     }
 
@@ -98,23 +124,10 @@ public class TestExtension extends ${artifactNamePascalCase}Extension {
     }
 
     @Override
-    public boolean handleKeyEvent(KeyEvent keyEvent) {
-        // We'll respond to Ctrl+T as a demo:
-        if (keyEvent.isControlDown() && keyEvent.getKeyCode() == KeyEvent.VK_T) {
-            JOptionPane.showMessageDialog(MainWindow.getInstance(),
-                                          "TestExtension received the Ctrl+T keyboard shortcut!\n" +
-                                                  "This keyboard shortcut will only work when the extension is enabled.");
-            return true;
-        }
-        return false;
-    }
-
-    @Override
     public List<JMenu> getTopLevelMenus() {
         // We'll add a simple "Test" menu with one item:
         JMenu testMenu = new JMenu("Test");
-        JMenuItem aboutItem = new JMenuItem(new DummyAction("About TestExtension",
-                                                            "This is a test extension for demonstration purposes."));
+        JMenuItem aboutItem = new JMenuItem(new DummyAction("About TestExtension", menuMessage));
         testMenu.add(aboutItem);
         return List.of(testMenu);
     }
@@ -125,20 +138,17 @@ public class TestExtension extends ${artifactNamePascalCase}Extension {
 
         // We'll return a dummy option for the "File" menu:
         if ("File".equals(topLevelMenu)) {
-            items.add(new JMenuItem(new DummyAction("TestExtension Info",
-                                                    "This is a test extension for demonstration purposes.")));
+            items.add(new JMenuItem(new DummyAction("TestExtension Info", menuMessage)));
         }
 
         // And a dummy option for the "Edit" menu:
         if ("Edit".equals(topLevelMenu)) {
-            items.add(new JMenuItem(new DummyAction("TestExtension Settings",
-                                                    "This is a test extension for demonstration purposes.")));
+            items.add(new JMenuItem(new DummyAction("TestExtension Settings", menuMessage)));
         }
 
         // And a dummy option for the "Help" menu:
         if ("Help".equals(topLevelMenu)) {
-            items.add(new JMenuItem(new DummyAction("TestExtension Help",
-                                                    "This is a test extension for demonstration purposes.")));
+            items.add(new JMenuItem(new DummyAction("TestExtension Help", menuMessage)));
         }
 
         return items;

@@ -7,13 +7,13 @@
     <groupId>ca.corbett</groupId>
     <artifactId>swing-extras-archetype</artifactId>
 
-    <!-- This archetype will generate a project with swing-extras version 2.6.0 as a dependency.                   -->
+    <!-- This archetype will generate a project with swing-extras version 2.7.0 as a dependency.                   -->
     <!-- The archetype patch version may increment independently of the swing-extras library version,              -->
     <!-- but the major.minor will match the major.minor version of swing-extras it is designed to work with.       -->
     <!-- For example, versions 2.6.0, 2.6.1, 2.6.2 of this archetype all generate projects with swing-extras 2.6.0 -->
     <!-- And version 2.7.0 of this archetype would generate projects with swing-extras 2.7.0                       -->
     <!-- The swing-extras library does not normally have patch releases, so only major.minor actually matters.     -->
-    <version>2.6.1</version>
+    <version>2.7.0</version>
 
     <packaging>maven-archetype</packaging>
 

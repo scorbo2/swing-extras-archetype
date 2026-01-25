@@ -1,41 +1,58 @@
 package ${package}.${artifactNameLowerCase}.ui;
 
 import ca.corbett.extras.MessageUtil;
+import ca.corbett.extras.io.KeyStrokeManager;
 import ca.corbett.extras.SingleInstanceManager;
+import ca.corbett.extras.logging.LogConsole;
+import ca.corbett.extras.logging.LogConsoleStyle;
+import ca.corbett.extras.logging.LogConsoleTheme;
+import ca.corbett.extras.properties.KeyStrokeProperty;
 import ${package}.${artifactNameLowerCase}.AppConfig;
 import ${package}.${artifactNameLowerCase}.Main;
+import ${package}.${artifactNameLowerCase}.${artifactNamePascalCase}ResourceLoader;
 import ${package}.${artifactNameLowerCase}.Version;
 import ${package}.${artifactNameLowerCase}.extensions.${artifactNamePascalCase}ExtensionManager;
 import ${package}.${artifactNameLowerCase}.ui.actions.UIReloadAction;
 
 import javax.swing.JFrame;
+import java.awt.Color;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.List;
 import java.util.logging.Logger;
 
+/**
+ * The main application window for your application.
+ * This is a singleton class - use MainWindow.getInstance() to get the instance.
+ */
 public final class MainWindow extends JFrame implements UIReloadable {
 
-    private static final MainWindow instance = new MainWindow();
+    private static MainWindow instance;
     private static final Logger logger = Logger.getLogger(MainWindow.class.getName());
     private boolean isSingleInstanceModeEnabled;
     private MenuManager menuManager;
+    private final KeyStrokeManager keyStrokeManager;
     private MessageUtil messageUtil;
 
     private MainWindow() {
         setTitle(Version.FULL_NAME);
-        //setIconImage(); // TODO - set your application icon here
+        setIconImage(${artifactNamePascalCase}ResourceLoader.getSwingExtrasIcon()); // TODO - set your application icon here
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         addWindowListener(new WindowCloseHandler());
-        KeyboardManager.addGlobalKeyListener(this);
+        keyStrokeManager = new KeyStrokeManager(this);
+        setKeyStrokes();
         menuManager = new MenuManager();
         setJMenuBar(menuManager.getMainMenuBar());
         UIReloadAction.getInstance().registerReloadable(this);
         isSingleInstanceModeEnabled = AppConfig.getInstance().isSingleInstanceEnabled();
+        configureLogConsole();
     }
 
     public static MainWindow getInstance() {
+        if (instance == null) {
+            instance = new MainWindow();
+        }
         return instance;
     }
 
@@ -98,8 +115,27 @@ public final class MainWindow extends JFrame implements UIReloadable {
             toggleSingleInstanceMode();
         }
 
+        // Reassign our keyboard shortcuts, as they may have changed:
+        setKeyStrokes();
+
         // Rebuild our main menu, as the available items may have changed:
         menuManager.rebuildAll();
+    }
+
+    /**
+     * Sets up our KeyStrokeManager with the appropriate KeyStrokes from app config.
+     */
+    private void setKeyStrokes() {
+        keyStrokeManager.clear();
+        for (KeyStrokeProperty prop : AppConfig.getInstance().getKeyStrokeProperties()) {
+            // If there's no Action attached, or if there is no keystroke assigned to it, skip it:
+            if (prop.getAction() == null || prop.getKeyStroke() == null) {
+                continue;
+            }
+
+            // Register it! This will update the shortcut attached to our menu items as well:
+            keyStrokeManager.registerHandler(prop.getKeyStroke(), prop.getAction());
+        }
     }
 
     /**
@@ -145,6 +181,55 @@ public final class MainWindow extends JFrame implements UIReloadable {
             logger.info("Disabling single instance mode.");
             SingleInstanceManager.getInstance().release();
         }
+    }
+
+    /**
+     * Invoked internally to set up the LogConsole. This is entirely optional,
+     * and can be hidden entirely in the UI if you don't want users to see it.
+     * This example application exposes the log console with a menu item in the "Help" menu.
+     */
+    private void configureLogConsole() {
+        LogConsole.getInstance().setIconImage(getIconImage()); // use same logo as MainWindow
+
+        // We can create our own LogConsole theme here.
+        // This is more than just cosmetic, as we'll see.
+        // Let's start by creating a new theme based on the "matrix" theme (green on black):
+        LogConsoleTheme theme = LogConsoleTheme.createMatrixStyledTheme();
+
+        // We can add custom styles to our theme.
+        // This can help certain operations within your application stand out better in the LogConsole.
+        // For example, let's create example styles for "dataImport" and "dataExport" operations:
+        theme.setStyle("dataImport", createLogConsoleStyle("dataImport", Color.CYAN));
+        theme.setStyle("dataExport", createLogConsoleStyle("dataExport", Color.MAGENTA));
+        // TODO repeat for any other operations you wish to "stand out" in the LogConsole.
+
+        // Now let's register our theme and switch to it immediately:
+        LogConsole.getInstance().registerTheme("${artifactNamePascalCase}Theme", theme, true);
+
+        // To test it out, let's log some test messages.
+        logger.info("The LogConsole has been initialized!");
+
+        // Any log message that contains our special tokens will now visually stand out in the LogConsole:
+        logger.info("dataImport: This is a simulated data import operation log message.");
+        logger.info("dataExport: This is a simulated data export operation log message.");
+
+        // Of course, that only works when viewing log messages in the LogConsole.
+        // That's it! It's very easy to configure and use.
+        logger.info("By styling your application operations, you can quickly spot important events!");
+        logger.info("This makes monitoring and debugging much easier.");
+    }
+
+    /**
+     * Creates a LogConsoleStyle for the given token and font color.
+     * Any log message that contains the given token will be styled with the given color
+     * when viewed in the LogConsole.
+     */
+    private LogConsoleStyle createLogConsoleStyle(String token, Color fontColor) {
+        LogConsoleStyle style = new LogConsoleStyle();
+        style.setLogToken(token, true);
+        style.setFontColor(fontColor);
+        style.setIsBold(true);
+        return style;
     }
 
     /**
