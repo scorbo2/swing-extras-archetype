@@ -42,6 +42,8 @@ public class TestExtension extends ${artifactNamePascalCase}Extension {
     private static final Logger logger = Logger.getLogger(TestExtension.class.getName());
     private final AppExtensionInfo extInfo;
 
+    private final DummyAction dummyAction;
+
     private final String keyStrokeMessage = "You pressed the TestExtension keyboard shortcut!\n" +
             "This keyboard shortcut will only work when the extension is enabled.";
 
@@ -60,6 +62,9 @@ public class TestExtension extends ${artifactNamePascalCase}Extension {
                 .setTargetAppName(Version.NAME)
                 .setTargetAppVersion(Version.VERSION)
                 .build();
+
+        // Use a single instance of our action so that KeyStrokeManager can update its accelerator key:
+        dummyAction = new DummyAction("TestExtension action", keyStrokeMessage);
     }
 
     @Override
@@ -103,7 +108,7 @@ public class TestExtension extends ${artifactNamePascalCase}Extension {
         KeyStrokeProperty keyProp = new KeyStrokeProperty(propName,
                                                           "Key shortcut:",
                                                           KeyStrokeManager.parseKeyStroke("Ctrl+T"),
-                                                          new DummyAction("TestExtension Action", keyStrokeMessage));
+                                                          dummyAction);
 
         // We could prevent it from showing up on the app properties dialog if we wanted to:
         // keyProp.setExposed(false);

@@ -10,7 +10,6 @@ import java.util.List;
  * You can add application-specific hooks here as needed.
  * Some example hooks have been provided to give you an idea as to what's possible:
  * <ul>
- *     <li>handleKeyEvent() - Extensions can register to receive and handle keyboard shortcuts.</li>
  *     <li>getTopLevelMenus() - Extensions can add their own top-level menus to the main menu.</li>
  *     <li>getMenuItems() - Extensions can add menu items to existing top-level menus.</li>
  * </ul>
@@ -18,6 +17,12 @@ import java.util.List;
  *     Whatever functionality your application offers, try to think of how that functionality could be
  *     augmented or even replaced by an extension. Then add appropriate hooks here to allow extensions
  *     to interact with your application in those ways!
+ * </p>
+ * <p>
+ *     <b>Exposing keyboard shortcuts</b> - your extension can expose KeyStrokeProperty instances
+ *     as part of its configuration property list. These will be exposed for configuration via
+ *     the application's settings dialog. Whatever action you associate with the KeyStrokeProperty
+ *     will be updated (accelerator key) whenever the user changes the configured keystroke.
  * </p>
  *
  * @author <a href="https://github.com/scorbo2">scorbo2</a>
