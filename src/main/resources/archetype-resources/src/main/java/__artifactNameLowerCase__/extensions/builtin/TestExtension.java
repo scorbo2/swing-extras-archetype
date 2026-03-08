@@ -42,8 +42,7 @@ public class TestExtension extends ${artifactNamePascalCase}Extension {
     private static final Logger logger = Logger.getLogger(TestExtension.class.getName());
     private final AppExtensionInfo extInfo;
 
-    // Use a single instance of our action so that KeyStrokeManager can update its accelerator key:
-    private final DummyAction dummyAction = new DummyAction("TestExtension action", keyStrokeMessage);
+    private final DummyAction dummyAction;
 
     private final String keyStrokeMessage = "You pressed the TestExtension keyboard shortcut!\n" +
             "This keyboard shortcut will only work when the extension is enabled.";
@@ -63,6 +62,9 @@ public class TestExtension extends ${artifactNamePascalCase}Extension {
                 .setTargetAppName(Version.NAME)
                 .setTargetAppVersion(Version.VERSION)
                 .build();
+
+        // Use a single instance of our action so that KeyStrokeManager can update its accelerator key:
+        dummyAction = new DummyAction("TestExtension action", keyStrokeMessage);
     }
 
     @Override
