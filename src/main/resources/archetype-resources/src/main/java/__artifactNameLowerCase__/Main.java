@@ -1,5 +1,6 @@
 package ${package}.${artifactNameLowerCase};
 
+import ca.corbett.extras.FallbackExceptionHandler;
 import ca.corbett.extras.LookAndFeelManager;
 import ca.corbett.extras.SingleInstanceManager;
 import ca.corbett.updates.UpdateManager;
@@ -32,6 +33,9 @@ public class Main {
     public static void main(String[] args) {
         // Before we do anything else, set up logging:
         configureLogging();
+
+        // Set up a FallbackExceptionHandler for uncaught exceptions in any thread:
+        FallbackExceptionHandler.register();
 
         // Peek at our config file to see if single instance mode is enabled:
         boolean isSingleInstanceEnabled = Boolean.parseBoolean(AppConfig.peek(AppConfig.SINGLE_INSTANCE_PROP));
