@@ -16,7 +16,7 @@ replacing the placeholders with your own values:
 mvn archetype:generate \
   -DarchetypeGroupId=ca.corbett \
   -DarchetypeArtifactId=swing-extras-archetype \
-  -DarchetypeVersion=2.8.0 \
+  -DarchetypeVersion=2.9.0 \
   -DgroupId=com.example \
   -DartifactId=my-app \
   -Dversion=1.0.0 \
@@ -36,10 +36,10 @@ in the details for our new project:
 
 **Always use the latest version of the archetype!**
 
-At the time of writing, the latest version is `2.8.0`. You can check for the latest version on
+At the time of writing, the latest version is `2.9.0`. You can check for the latest version on
 [Maven Central](https://repo1.maven.org/maven2/ca/corbett/swing-extras-archetype/).
 
-This archetype will generate a project with swing-extras version 2.8.0 as a dependency.
+This archetype will generate a project with swing-extras version 2.9.0 as a dependency.
 The archetype patch version may increment independently of the swing-extras library version,
 but the `major.minor` will match the `major.minor` version of swing-extras it is designed to work with.
 For example, versions 2.6.0, 2.6.1, 2.6.2 of this archetype all generate projects with swing-extras 2.6.0,
@@ -148,6 +148,7 @@ Your skeletal application comes with many `swing-extras` features already wired 
       made. The MainWindow is wired up to receive UI reload events, and you can add your additional dialogs or UI
       classes to the notification list by implementing the `UIReloadable` interface, and adding your UI class as a
       listener to the `UIReloadAction` class.
+- **A fallback exception handler** - any uncaught exception in your application will be properly logged.
 - **Intelligent detection of your application environment.**
     - The `Version` class automatically detects your application's installation directory based on supplied environment
       variables, and also your application's configuration and extension directories. These are exposed to your
