@@ -1,8 +1,9 @@
 package ${package}.${artifactNameLowerCase}.ui.actions;
 
 import ca.corbett.extras.logging.LogConsole;
+import ca.corbett.extras.EnhancedAction;
+import ${package}.${artifactNameLowerCase}.ui.MainWindow;
 
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 /**
@@ -10,7 +11,9 @@ import java.awt.event.ActionEvent;
  *
  * @author <a href="https://github.com/scorbo2">scorbo2</a>
  */
-public class LogConsoleAction extends AbstractAction {
+public class LogConsoleAction extends EnhancedAction {
+
+    private static boolean positionAdjusted = false;
 
     public LogConsoleAction() {
         super("Show Log Console");
@@ -18,6 +21,15 @@ public class LogConsoleAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        // The first time LogConsole is shown, we'll position it over the MainWindow.
+        // But LogConsole is a singleton hide-when-closed window, so if the user adjusts
+        // its position manually after bringing it up, and then closes it, we don't want
+        // to mess with it again.
+        if (!positionAdjusted) {
+            LogConsole.getInstance().setLocationRelativeTo(MainWindow.getInstance());
+            positionAdjusted = true;
+        }
+
         LogConsole.getInstance().setVisible(true);
     }
 }
